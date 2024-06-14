@@ -9,10 +9,10 @@ const short int DECK_SIZE = 52;
 class Deck{
 private: 
 
-	Card deck[DECK_SIZE];
+	Card* deck[DECK_SIZE];
 	short int drawn_count;
 
-	Card CardAt(int);
+	Card* CardAt(int);
 
 	void SetCardAt(Card, int);
 
@@ -26,9 +26,9 @@ public:
 	
 	Deck();
 
-	Card DrawRandomCard();
+	Card* DrawRandomCard();
 
-	Card DrawSpecificCard(Card);
+	Card* DrawSpecificCard(Card);
 
 	void ShuffleDeck();
 
@@ -37,11 +37,6 @@ public:
 	int NumRemainingCards();
 
 	int NumDrawnCards();
-
-
-
-	
-
 };
 
 v

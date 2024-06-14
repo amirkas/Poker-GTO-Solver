@@ -31,6 +31,12 @@
     <Filter Include="Header Files\Solver">
       <UniqueIdentifier>{5ac28fdb-e908-46fb-ad2f-83d47aeeec08}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Test">
+      <UniqueIdentifier>{180f8799-d241-49aa-aaaf-8917d68bd99a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test\Deck">
+      <UniqueIdentifier>{3b270510-e038-4544-b36b-7b944c03ffde}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -85,6 +91,9 @@
     </ClCompile>
     <ClCompile Include="HoleCards.cpp">
       <Filter>Source Files\Deck</Filter>
+    </ClCompile>
+    <ClCompile Include="CardTest.cpp">
+      <Filter>Test\Deck</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -84,4 +84,8 @@ bool operator>(Card& first, Card& second) {
 }
 
 
+//Comparator Implementation
+bool Card::CardComparator(const Card* a, const Card* b) {
+	return a < b;
+}
 

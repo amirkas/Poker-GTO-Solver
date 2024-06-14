@@ -2,15 +2,18 @@
 #include "Card.h"
 #include <random>
 
-//Constructor for Deck
-//Initialize 52 card Deck using Card Object
+/*
+Constructor for Deck\
+Initialize 52 card Deck using pointer to Card Object
+Calls ResetDeck which Inits deck to initial state:
+	- Deuce to A, grouped by suits Spade to Heart.
+*/
 Deck::Deck() {
-
 	int pos = 0;
 	for (char suit : CARD_SUITS) {
 		for (char rank : CARD_RANKS) {
 			Card card(rank, suit);
-			deck[pos] = card;
+			deck[pos] = &card;
 			pos++;
 		}
 	}
@@ -34,14 +37,14 @@ Card cannot be redrawn until deck is shuffled / reset
 		- Undrawn portion : [0, NumRemainingCards)
 		- Drawn Portion : [NumRemainingCards, DECK_SIZE)
 */
-Card Deck::DrawRandomCard() {
+Card* Deck::DrawRandomCard() {
 
 	short int drawn_cards = NumDrawnCards();
 	if (drawn_cards == DECK_SIZE) {
 		ShuffleDeck;
 	}
 	int r = RandomCardIndex(0, GetUndrawnEnd());
-	Card drawn_card = CardAt(r);
+	Card *drawn_card = CardAt(r);
 	SwapCards(r, GetUndrawnEnd());
 	return drawn_card;
 }
@@ -54,24 +57,41 @@ Card cannot be redrawn until deck is shuffled / reset
  * If card is already drawn, returns null
 	- Iterate through undrawn portion of deck.
 	- If card found, swap to end of Undrawn portion and return card.
-	- If card not found, return null.
+	- If card not found, return nullptr.
 */
-Card Deck::DrawSpecificCard(Card) {
+Card* Deck::DrawSpecificCard(Card card) {
 	int i = 0;
 	int end = GetUndrawnEnd();
 	for (i; i < end; i++) {
-
+		Card *curr = CardAt(i);
+		if (*curr == card) {
+			SwapCards(i, GetUndrawnEnd());
+			return curr;
+		}
 	}
-
+	//If card not found
+	return nullptr;
 }
 
 
+/*
+Shuffles deck by resetting drawn card count to 0.
+Cards in deck are not repositioned.
+*/
+void Deck::ShuffleDeck() {
+	this->drawn_count = 0;
+}
 
-
-
-
-
-
+/*
+Resets deck to initial position by sorting.
+Drawn count resets to 0.
+Deck state after reset: 
+	- Deuce to A, grouped by suits Spade to Heart.
+*/
+void Deck::ResetDeck() {
+	std::sort(this->deck, this->deck + DECK_SIZE, Card::CardComparator);
+	this->drawn_count = 0;
+}
 
 /*
 Helper functions used by API.

@@ -139,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Card.cpp" />
+    <ClCompile Include="CardTest.cpp" />
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="HandBitMask.cpp" />
     <ClCompile Include="HandEvaluation.cpp" />
