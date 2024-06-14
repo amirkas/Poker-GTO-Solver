@@ -1,15 +1,15 @@
 #include "HandEvaluation.h"
 
-
-std::string ordered_cards = "AKQJT98765432";
-
-std::map<char, int> *card_rank_map;
-
 bool HandEvaluator::CardRankComparator(std::string card_a, std::string card_b) {
 
 	int card_a_rank = GetCardRank(card_a);
 	int card_b_rank = GetCardRank(card_b);
+	if (card_a_rank == card_a_rank) {
+		int card_a_suit_rank = this->card_suit_map->at(GetCardSuit(card_a));
+		int card_b_suit_rank = this->card_suit_map->at(GetCardSuit(card_b));
+		return card_a_suit_rank > card_b_suit_rank;
 
+	}
 	return card_a_rank > card_b_rank;
 }
 
@@ -310,6 +310,21 @@ HandEvaluator::HandEvaluator() {
 		card_rank_map->insert(card_rank_pair);
 		rank -= 1;
 	}
+
+	//Initialize Card Suit Map
+	
+	card_suit_map = new std::map<char, int>;
+	//Fill Card Suit Map
+	std::pair<char, int> spade = std::make_pair('s', 4);
+	std::pair<char, int> club = std::make_pair('c', 3);
+	std::pair<char, int> diamond = std::make_pair('d', 2);
+	std::pair<char, int> heart = std::make_pair('h', 1);
+
+	card_suit_map->insert(spade);
+	card_suit_map->insert(club);
+	card_suit_map->insert(diamond);
+	card_suit_map->insert(heart);
+
 	
 }
 

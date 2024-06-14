@@ -13,6 +13,24 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Hand Evaluation">
+      <UniqueIdentifier>{d29084c6-f374-4026-a544-38f2f83de65c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Solver">
+      <UniqueIdentifier>{b1bc1a25-45b2-4954-9ddc-938696c77852}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Deck">
+      <UniqueIdentifier>{802aee07-82e6-4207-91a4-8c53c70ee6f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Hand Evaluation">
+      <UniqueIdentifier>{fd734f62-eb92-484b-bdd4-9e77b7df61a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Deck">
+      <UniqueIdentifier>{e76c586b-7699-4e25-9363-640bf5c9d0ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Solver">
+      <UniqueIdentifier>{5ac28fdb-e908-46fb-ad2f-83d47aeeec08}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -27,28 +45,46 @@
     <ClInclude Include="PokerSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HandEvaluation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Strategy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Card.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Deck</Filter>
+    </ClInclude>
+    <ClInclude Include="FastHandEvaluator.h">
+      <Filter>Header Files\Hand Evaluation</Filter>
+    </ClInclude>
+    <ClInclude Include="HandEvaluation.h">
+      <Filter>Header Files\Hand Evaluation</Filter>
+    </ClInclude>
+    <ClInclude Include="Deck.h">
+      <Filter>Header Files\Deck</Filter>
+    </ClInclude>
+    <ClInclude Include="HoleCards.h">
+      <Filter>Header Files\Deck</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PokerSolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HandEvaluation.cpp">
+    <ClCompile Include="CardBitMask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Strategy.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="FastHandEvaluator.cpp">
+      <Filter>Source Files\Hand Evaluation</Filter>
+    </ClCompile>
+    <ClCompile Include="HandBitMask.cpp">
+      <Filter>Source Files\Hand Evaluation</Filter>
+    </ClCompile>
+    <ClCompile Include="HandEvaluation.cpp">
+      <Filter>Source Files\Hand Evaluation</Filter>
     </ClCompile>
     <ClCompile Include="Card.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Deck</Filter>
+    </ClCompile>
+    <ClCompile Include="Deck.cpp">
+      <Filter>Source Files\Deck</Filter>
+    </ClCompile>
+    <ClCompile Include="HoleCards.cpp">
+      <Filter>Source Files\Deck</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

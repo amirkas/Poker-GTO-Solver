@@ -57,6 +57,8 @@ private:
 
 	std::map<char, int>* card_rank_map;
 
+	std::map<char, int>* card_suit_map;
+
 	//Hand Evaluator Helper methods.
 	bool CardRankComparator(std::string, std::string);
 

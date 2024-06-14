@@ -1,0 +1,357 @@
+#include "FastHandEvaluator.h"
+
+
+//Creates FastHandEvaluator Object, which takes in filename that will/already stores the lookup table
+//Bool new_file creates new lookup table file at file_name if true, loads file at filename if false.
+FastHandEvaluator::FastHandEvaluator(std::string file_name, bool new_file, bool store_contents) {
+
+	lookup_file = file_name;
+	
+	flushes = new std::map<std::bitset<27>, short>;
+	straights = new std::map<std::bitset<27>, short>;
+	paired = new std::map<std::bitset<27>, short>;
+	high_cards = new std::map<std::bitset<27>, short>;
+
+	are_hands_evaluated = false;
+	if (new_file) {
+		//Creates file by precomputing hand ranks
+		//stores the contents in this object within memory if store_contents is true.
+		CreateLookupFile(lookup_file, store_contents);
+	}
+	else {
+		//Reads file at file_name and stores contents in this object.
+		ReadLookupFile(lookup_file);
+	}
+}
+
+//Deconstructor
+FastHandEvaluator::~FastHandEvaluator() {
+
+	delete(flushes);
+	delete(straights);
+	delete(paired);
+	delete(high_cards);
+}
+
+
+//Returns -1 if File could not be created
+//Returns -2 if Lookup Table could not be created
+//Returns 1 if File created successfully
+//Returns 2 if File created and stored in Object Successfully.
+int FastHandEvaluator::CreateLookupFile(std::string file_name, bool store_contents) {
+
+
+}
+
+//Returns -1 if File could not be opened
+//Returns -2 if File contents could not be stored
+//Returns 1 if File opened and stored Successfully.
+int FastHandEvaluator::ReadLookupFile(std::string file_name) {
+
+	std::streampos size;
+	int err;
+
+	std::ifstream file(file_name.c_str(), std::ios::in, std::ios::binary, std::ios::ate);
+	if (file.is_open()) {
+		size = file.tellg();
+		if (size * sizeof(char) > TABLE_SIZE * sizeof(short)) {
+			return -2;
+		}
+		file.seekg(0, std::ios::beg);
+		file.read((char*) this->lookup_table, size);
+		file.close();
+		return 1;
+	}
+	else {
+		return -1;
+	}
+}
+
+
+//Returns -1 if hand cannot be evaluated
+short FastHandEvaluator::EvaluateHandRank(std::vector<HandBitMask*>* hand_bits) {
+
+	if (!this->are_hands_evaluated) {
+		return -1;
+	}
+	//Hand must have 5 cards
+	if (hand_bits->size() != 5) {
+		return -1;
+	}
+}
+
+void FastHandEvaluator::EvaluateAllHandRanks(short* buf) {
+
+	GenerateStraightFlushesAndStraights(this->flushes, this->straights);
+
+	GenerateQuads(this->paired);
+
+	GenerateFullHouses(this->paired);
+
+	GenerateFlushes(this->flushes);
+
+	GenerateTrips(this->paired);
+
+	GenerateTwoPairs(this->paired);
+
+	GenerateOnePairs(this->paired);
+
+	GenerateAllHighCards(this->high_cards, START_RANK_HIGH_CARDS);
+
+	are_hands_evaluated = true;
+
+}
+
+void FastHandEvaluator::GenerateStraightFlushesAndStraights(std::map<std::bitset<27>, short>* flushes, std::map<std::bitset<27>, short>* straights) {
+	
+	short hand_rank = START_RANK_STRAIGHT_FLUSH;
+	short straight_rank = START_RANK_STRAIGHTS;
+	int i = 0;
+
+	for (hand_rank; hand_rank < DISTINCT_STRAIGHT_FLUSHES; hand_rank++) {
+		int straight_prime = STRAIGHT_PRIME_VALS[i];
+		std::pair<int, short> straight_flush_entry = std::make_pair(straight_prime, hand_rank);
+		std::pair<int, short> straight_entry = std::make_pair(straight_prime, straight_rank);
+		flushes->insert(straight_flush_entry);
+		straights->insert(straight_entry);
+
+		i += 1;
+		straight_rank++;
+	}
+}
+
+void FastHandEvaluator::GenerateQuads(std::map<std::bitset<27>, short>* paired) {
+
+	short hand_rank = START_RANK_QUADS;
+	int quad_rank = CARD_RANKS.at('A');
+	
+	for (quad_rank; quad_rank > 1; quad_rank--) {
+
+		int kicker_rank = CARD_RANKS.at('A');
+		for (kicker_rank; kicker_rank > 1; kicker_rank--) {
+
+			if (kicker_rank == quad_rank) {
+				continue;
+			}
+			int quad_prime = GetCardPrime(quad_rank);
+			int kicker_prime = GetCardPrime(kicker_rank);
+			int total_prime = pow(quad_prime, 4) * kicker_prime;
+			std::pair<int, short> quad_entry = std::make_pair(total_prime, hand_rank);
+			paired->insert(quad_entry);
+			hand_rank++;
+		}	
+	}
+}
+
+void FastHandEvaluator::GenerateFullHouses(std::map<std::bitset<27>, short>* paired) {
+
+	short hand_rank = START_RANK_FULL_HOUSE;
+	
+	int trips_rank = CARD_RANKS.at('A');
+
+	for (trips_rank; trips_rank > 1; trips_rank--) {
+
+		int pair_rank = CARD_RANKS.at('A');
+		for (pair_rank; pair_rank > 1; pair_rank--) {
+
+			if (trips_rank == pair_rank) {
+				continue;
+			}
+			int trips_prime = GetCardPrime(trips_rank);
+			int pair_prime = GetCardPrime(pair_rank);
+			int total_prime = pow(trips_prime, 3) * pow(pair_prime, 2);
+			std::pair<int, short> full_house_entry = std::make_pair(total_prime, hand_rank);
+			paired->insert(full_house_entry);
+			hand_rank++;
+		}
+	}
+}
+
+void FastHandEvaluator::GenerateAllHighCards(std::map<std::bitset<27>, short>* high_cards, int start_rank) {
+
+	short hand_rank = start_rank;
+
+	int first_rank = CARD_RANKS.at('A');
+	for (first_rank; first_rank > 5; first_rank--) {
+
+		int second_rank = first_rank - 1;
+		for (second_rank; second_rank > 4; second_rank--) {
+
+			int third_rank = second_rank - 1;
+			for (third_rank; third_rank > 3; third_rank--) {
+
+				int fourth_rank = third_rank - 1;
+				for (fourth_rank; fourth_rank > 2; fourth_rank--) {
+
+					int fifth_rank = fourth_rank - 1);
+					for (fifth_rank; fifth_rank > 1; fifth_rank--) {
+
+						std::vector<int> temp_rank_list = { first_rank, second_rank, third_rank, fourth_rank, fifth_rank };
+						//Check if cards don't make a straight.
+						if (!IsHandStraight(temp_rank_list)) {
+
+							int first_prime = GetCardPrime(first_rank);
+							int second_prime = GetCardPrime(second_rank);
+							int third_prime = GetCardPrime(third_rank);
+							int fourth_prime = GetCardPrime(fourth_rank);
+							int fifth_prime = GetCardPrime(fifth_rank);
+
+							int prime_product = first_prime * second_prime * third_prime * fourth_prime * fifth_prime;
+							std::pair<int, short> high_card_entry = std::make_pair(prime_product, hand_rank);
+							high_cards->insert(high_card_entry);
+
+							hand_rank++;
+
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void FastHandEvaluator::GenerateFlushes(std::map<std::bitset<27>, short>* flushes) {
+	GenerateAllHighCards(flushes, START_RANK_FLUSHES);
+}
+
+void FastHandEvaluator::GenerateTrips(std::map<std::bitset<27>, short>* paired) {
+
+	short hand_rank = START_RANK_TRIPS;
+	int trips_rank = CARD_RANKS.at('A');
+
+	for (trips_rank; trips_rank > 1, trips_rank--) {
+
+		int kicker_high_rank = CARD_RANKS.at('A');
+		for (kicker_high_rank; kicker_high_rank > 2; kicker_high_rank--) {
+
+			int kicker_low_rank = kicker_high_rank - 1;
+			for (kicker_low_rank; kicker_low_rank > 1; kicker_low_rank--) {
+
+				std::vector<int> temp_rank_list = {trips_rank, kicker_high_rank, kicker_low_rank };
+				//Make sure card ranks are unique
+				if (kicker_high_rank != trips_rank && kicker_low_rank != trips_rank) {
+
+					int trips_prime = GetCardPrime(trips_rank);
+					int kicker_high_prime = GetCardPrime(kicker_high_rank);
+					int kicker_low_prime = GetCardPrime(kicker_low_prime);
+					int prime_product = pow(trips_prime, 3) * kicker_high_prime * kicker_low_prime;
+					std::pair<int, short> trips_entry = std::make_pair(prime_product, hand_rank);
+					paired->insert(trips_entry);
+
+					hand_rank++;
+				}
+			}
+		}
+	}
+}
+
+void FastHandEvaluator::GenerateTwoPairs(std::map<std::bitset<27>, short>* paired) {
+
+	int hand_rank = START_RANK_TWO_PAIRS;
+	
+	int high_pair = CARD_RANKS.at('A');
+
+	for (high_pair; high_pair > 2; high_pair--) {
+
+		int low_pair = high_pair - 1;
+		for (low_pair; low_pair > 1; low_pair--) {
+
+			int kicker = CARD_RANKS.at('A');
+			for (kicker; kicker > 1; kicker--) {
+
+				if (kicker != high_pair && kicker != low_pair) {
+
+					int high_pair_prime = GetCardPrime(high_pair);
+					int low_pair_prime = GetCardPrime(low_pair);
+					int kicker_prime = GetCardPrime(kicker);
+					int prime_product = pow(high_pair_prime, 2) * pow(low_pair_prime, 2) * kicker_prime;
+					std::pair<int, short> two_pair_entry = std::make_pair(prime_product, hand_rank);
+					paired->insert(two_pair_entry);
+
+					hand_rank++;
+				}
+			}
+		}
+	}
+}
+
+void FastHandEvaluator::GenerateOnePairs(std::map<std::bitset<27>, short>* paired) {
+
+	int hand_rank = START_RANK_ONE_PAIRS;
+
+	int pair_rank = CARD_RANKS.at('A');
+
+	for (pair_rank; pair_rank > 1; pair_rank--) {
+
+		int high_kicker = CARD_RANKS.at('A');
+		for (high_kicker; high_kicker > 3; high_kicker--) {
+
+			int medium_kicker = high_kicker - 1;
+			for (medium_kicker; medium_kicker > 2; medium_kicker--) {
+
+				int small_kicker = medium_kicker - 1;
+				for (small_kicker; small_kicker > 1; small_kicker--) {
+
+					if (pair_rank != high_kicker && pair_rank != medium_kicker && pair_rank != small_kicker) {
+
+						int pair_prime = GetCardPrime(pair_rank);
+						int high_kicker_prime = GetCardPrime(high_kicker);
+						int medium_kicker_prime = GetCardPrime(medium_kicker_prime);
+						int low_kicker_prime = GetCardPrime(low_kicker_prime);
+
+						int prime_product = pow(pair_prime, 2) * high_kicker_prime * medium_kicker_prime * low_kicker_prime;
+						std::pair<int, short> pair_entry = std::make_pair(prime_product, hand_rank);
+						hand_rank++;
+					}
+				}
+			}
+		}
+	}
+}
+
+//Helper Functions
+
+bool FastHandEvaluator::AreRanksUnique(std::vector<int> ranks_list) {
+
+	std::bitset<13> curr = std::bitset<13>().set();
+	for (int rank : ranks_list) {
+		std::bitset<13> int_bit = std::bitset<13>().set(1);
+		int_bit << (rank - 2);
+		curr |= int_bit;
+
+	}
+	return curr.count() == ranks_list.size();
+}
+
+bool FastHandEvaluator::IsHandStraight(std::vector<int> ranks_list) {
+
+	int min_rank = 15;
+	int max_rank = 0;
+	std::bitset<13> curr = std::bitset<13>().set();
+	for (int rank : ranks_list) {
+		min_rank = std::min(rank, min_rank);
+		max_rank = std::min(rank, max_rank);
+		std::bitset<13> int_bit = std::bitset<13>().set(1);
+		int_bit << (rank - 2);
+		curr |= int_bit;
+	}
+
+	curr >> (min_rank - 2);
+
+	//Edge case for Wheel Straight
+	if (max_rank == 14 && min_rank == 2) {
+		//Shift bitset to left by 1 and OR with {00001} to check for wheel
+		curr << 1;
+		std::bitset<13> one_bit = std::bitset<13>().set(1);
+		curr |= one_bit;
+	}
+	
+	//Check if straight by bitwise and with Straight Bit Mask
+	curr &= STRAIGHT_BIT_MASK;
+	return curr.count() == 5;	
+}
+
+int FastHandEvaluator::GetCardPrime(int card_rank) {
+
+	return CARD_PRIME[card_rank - 2];
+}
