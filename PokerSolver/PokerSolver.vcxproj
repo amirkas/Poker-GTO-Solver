@@ -128,12 +128,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Card.h" />
+    <ClInclude Include="CardBitMask.h" />
     <ClInclude Include="Deck.h" />
     <ClInclude Include="FastHandEvaluator.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="HandBitMask.h" />
     <ClInclude Include="HandEvaluation.h" />
+    <ClInclude Include="HandEvaluationConstants.h" />
     <ClInclude Include="HoleCards.h" />
+    <ClInclude Include="PerfectHashTable.h" />
     <ClInclude Include="PokerSolver.h" />
+    <ClInclude Include="Range.h" />
+    <ClInclude Include="RangeHand.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -144,9 +150,12 @@
     <ClCompile Include="HandBitMask.cpp" />
     <ClCompile Include="HandEvaluation.cpp" />
     <ClCompile Include="HoleCards.cpp" />
+    <ClCompile Include="PerfectHashTable.cpp" />
     <ClCompile Include="PokerSolver.cpp" />
     <ClCompile Include="FastHandEvaluator.cpp" />
     <ClCompile Include="CardBitMask.cpp" />
+    <ClCompile Include="Range.cpp" />
+    <ClCompile Include="RangeHand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PokerSolver.rc" />

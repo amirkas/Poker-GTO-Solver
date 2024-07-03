@@ -37,6 +37,21 @@
     <Filter Include="Test\Deck">
       <UniqueIdentifier>{3b270510-e038-4544-b36b-7b944c03ffde}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Hand Evaluation">
+      <UniqueIdentifier>{d541a89d-9a1f-4b01-af7b-86dd048ef0f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Solver\Range">
+      <UniqueIdentifier>{3d9c7dd1-2fb7-4a6e-a44c-b6a77e9b1685}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Solver\Range">
+      <UniqueIdentifier>{b37b9908-30a2-4f2b-8b6e-d59167357186}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils">
+      <UniqueIdentifier>{d9013d7c-f09d-4291-9ce9-c0a5c151bc9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{2abaefa1-51ec-4af6-8b88-f87a5c7bdbdd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -66,12 +81,27 @@
     <ClInclude Include="HoleCards.h">
       <Filter>Header Files\Deck</Filter>
     </ClInclude>
+    <ClInclude Include="HandBitMask.h">
+      <Filter>Header Files\Hand Evaluation</Filter>
+    </ClInclude>
+    <ClInclude Include="CardBitMask.h">
+      <Filter>Header Files\Hand Evaluation</Filter>
+    </ClInclude>
+    <ClInclude Include="HandEvaluationConstants.h">
+      <Filter>Resource Files\Hand Evaluation</Filter>
+    </ClInclude>
+    <ClInclude Include="Range.h">
+      <Filter>Header Files\Solver\Range</Filter>
+    </ClInclude>
+    <ClInclude Include="RangeHand.h">
+      <Filter>Header Files\Solver\Range</Filter>
+    </ClInclude>
+    <ClInclude Include="PerfectHashTable.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PokerSolver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CardBitMask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FastHandEvaluator.cpp">
@@ -94,6 +124,18 @@
     </ClCompile>
     <ClCompile Include="CardTest.cpp">
       <Filter>Test\Deck</Filter>
+    </ClCompile>
+    <ClCompile Include="CardBitMask.cpp">
+      <Filter>Source Files\Hand Evaluation</Filter>
+    </ClCompile>
+    <ClCompile Include="Range.cpp">
+      <Filter>Source Files\Solver\Range</Filter>
+    </ClCompile>
+    <ClCompile Include="RangeHand.cpp">
+      <Filter>Source Files\Solver\Range</Filter>
+    </ClCompile>
+    <ClCompile Include="PerfectHashTable.cpp">
+      <Filter>Source Files\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

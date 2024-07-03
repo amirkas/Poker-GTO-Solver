@@ -1,18 +1,19 @@
 #include "FastHandEvaluator.h"
-
+#include "HandEvaluationConstants.h"
+using namespace HandEvalConstants;
 
 //Creates FastHandEvaluator Object, which takes in filename that will/already stores the lookup table
 //Bool new_file creates new lookup table file at file_name if true, loads file at filename if false.
 FastHandEvaluator::FastHandEvaluator(std::string file_name, bool new_file, bool store_contents) {
 
-	lookup_file = file_name;
-	
-	flushes = new std::map<std::bitset<27>, short>;
-	straights = new std::map<std::bitset<27>, short>;
-	paired = new std::map<std::bitset<27>, short>;
-	high_cards = new std::map<std::bitset<27>, short>;
+	this->lookup_file = file_name;
+	//Initialize struct of lookup maps.
+	this->lookup_struct = new LookupData;
+	this->lookup_struct->flushes = new std::map<int, short>;
+	this->lookup_struct->paired = new std::map<int, short>;
+	this->lookup_struct->unique_ranks = new std::map<int, short>;
 
-	are_hands_evaluated = false;
+	this->are_hands_evaluated = false;
 	if (new_file) {
 		//Creates file by precomputing hand ranks
 		//stores the contents in this object within memory if store_contents is true.
@@ -69,7 +70,7 @@ int FastHandEvaluator::ReadLookupFile(std::string file_name) {
 
 
 //Returns -1 if hand cannot be evaluated
-short FastHandEvaluator::EvaluateHandRank(std::vector<HandBitMask*>* hand_bits) {
+short FastHandEvaluator::EvaluateHandRank(HandBitMask* hand_bits) {
 
 	if (!this->are_hands_evaluated) {
 		return -1;
@@ -82,27 +83,27 @@ short FastHandEvaluator::EvaluateHandRank(std::vector<HandBitMask*>* hand_bits) 
 
 void FastHandEvaluator::EvaluateAllHandRanks(short* buf) {
 
-	GenerateStraightFlushesAndStraights(this->flushes, this->straights);
+	GenerateStraightFlushesAndStraights(this->lookup_struct->flushes, this->lookup_struct->unique_ranks);
 
-	GenerateQuads(this->paired);
+	GenerateQuads(this->lookup_struct->paired);
 
-	GenerateFullHouses(this->paired);
+	GenerateFullHouses(this- lookup_struct-> >paired);
 
-	GenerateFlushes(this->flushes);
+	GenerateFlushes(this->lookup_struct->flushes);
 
-	GenerateTrips(this->paired);
+	GenerateTrips(this->lookup_struct->paired);
 
-	GenerateTwoPairs(this->paired);
+	GenerateTwoPairs(this->lookup_struct->paired);
 
-	GenerateOnePairs(this->paired);
+	GenerateOnePairs(this->lookup_struct->paired);
 
-	GenerateAllHighCards(this->high_cards, START_RANK_HIGH_CARDS);
+	GenerateAllHighCards(this->lookup_struct->unique_ranks,HandEvalConstants::START_RANK_HIGH_CARDS);
 
 	are_hands_evaluated = true;
 
 }
 
-void FastHandEvaluator::GenerateStraightFlushesAndStraights(std::map<std::bitset<27>, short>* flushes, std::map<std::bitset<27>, short>* straights) {
+void FastHandEvaluator::GenerateStraightFlushesAndStraights(std::map<int, short>* flushes, std::map<int, short>* straights) {
 	
 	short hand_rank = START_RANK_STRAIGHT_FLUSH;
 	short straight_rank = START_RANK_STRAIGHTS;
@@ -120,7 +121,7 @@ void FastHandEvaluator::GenerateStraightFlushesAndStraights(std::map<std::bitset
 	}
 }
 
-void FastHandEvaluator::GenerateQuads(std::map<std::bitset<27>, short>* paired) {
+void FastHandEvaluator::GenerateQuads(std::map<int, short>* paired) {
 
 	short hand_rank = START_RANK_QUADS;
 	int quad_rank = CARD_RANKS.at('A');
@@ -143,7 +144,7 @@ void FastHandEvaluator::GenerateQuads(std::map<std::bitset<27>, short>* paired) 
 	}
 }
 
-void FastHandEvaluator::GenerateFullHouses(std::map<std::bitset<27>, short>* paired) {
+void FastHandEvaluator::GenerateFullHouses(std::map<int, short>* paired) {
 
 	short hand_rank = START_RANK_FULL_HOUSE;
 	
@@ -167,7 +168,7 @@ void FastHandEvaluator::GenerateFullHouses(std::map<std::bitset<27>, short>* pai
 	}
 }
 
-void FastHandEvaluator::GenerateAllHighCards(std::map<std::bitset<27>, short>* high_cards, int start_rank) {
+void FastHandEvaluator::GenerateAllHighCards(std::map<int, short>* high_cards, int start_rank) {
 
 	short hand_rank = start_rank;
 
@@ -210,11 +211,11 @@ void FastHandEvaluator::GenerateAllHighCards(std::map<std::bitset<27>, short>* h
 	}
 }
 
-void FastHandEvaluator::GenerateFlushes(std::map<std::bitset<27>, short>* flushes) {
+void FastHandEvaluator::GenerateFlushes(std::map<int, short>* flushes) {
 	GenerateAllHighCards(flushes, START_RANK_FLUSHES);
 }
 
-void FastHandEvaluator::GenerateTrips(std::map<std::bitset<27>, short>* paired) {
+void FastHandEvaluator::GenerateTrips(std::map<int, short>* paired) {
 
 	short hand_rank = START_RANK_TRIPS;
 	int trips_rank = CARD_RANKS.at('A');
@@ -245,7 +246,7 @@ void FastHandEvaluator::GenerateTrips(std::map<std::bitset<27>, short>* paired) 
 	}
 }
 
-void FastHandEvaluator::GenerateTwoPairs(std::map<std::bitset<27>, short>* paired) {
+void FastHandEvaluator::GenerateTwoPairs(std::map<int, short>* paired) {
 
 	int hand_rank = START_RANK_TWO_PAIRS;
 	
@@ -275,7 +276,7 @@ void FastHandEvaluator::GenerateTwoPairs(std::map<std::bitset<27>, short>* paire
 	}
 }
 
-void FastHandEvaluator::GenerateOnePairs(std::map<std::bitset<27>, short>* paired) {
+void FastHandEvaluator::GenerateOnePairs(std::map<int, short>* paired) {
 
 	int hand_rank = START_RANK_ONE_PAIRS;
 
@@ -355,3 +356,5 @@ int FastHandEvaluator::GetCardPrime(int card_rank) {
 
 	return CARD_PRIME[card_rank - 2];
 }
+
+

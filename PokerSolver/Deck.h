@@ -16,7 +16,7 @@ private:
 
 	void SetCardAt(Card, int);
 
-	int RandomCardIndex(int, int);
+	static int RandomCardIndex(int, int);
 
 	void SwapCards(int, int);
 
