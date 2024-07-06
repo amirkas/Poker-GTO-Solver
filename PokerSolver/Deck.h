@@ -14,7 +14,7 @@ private:
 
 	Card* CardAt(int);
 
-	void SetCardAt(Card, int);
+	void SetCardAt(Card*, int);
 
 	static int RandomCardIndex(int, int);
 
@@ -39,4 +39,3 @@ public:
 	int NumDrawnCards();
 };
 
-v

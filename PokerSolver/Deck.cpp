@@ -98,12 +98,12 @@ Helper functions used by API.
 */
 
 //Retrieve Card at index 'card_index'
-Card Deck::CardAt(int card_index) {
+Card* Deck::CardAt(int card_index) {
 	return this->deck[card_index];
 }
 
 //Sets the Card in deck at 'card_index' to 'card'
-void Deck::SetCardAt(Card card, int card_index) {
+void Deck::SetCardAt(Card* card, int card_index) {
 	this->deck[card_index] = card;
 }
 
@@ -127,7 +127,7 @@ int Deck::NumDrawnCards() {
 //Swaps the cards at position 'index_one' and 'index_two' in the deck.
 void Deck::SwapCards(int index_one, int index_two) {
 
-	Card card_one = CardAt(index_one);
+	Card* card_one = CardAt(index_one);
 	SetCardAt(CardAt(index_two), index_one);;
 	SetCardAt(card_one, index_two);
 }
