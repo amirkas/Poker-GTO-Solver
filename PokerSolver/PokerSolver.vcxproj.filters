@@ -52,6 +52,12 @@
     <Filter Include="Header Files\Utils">
       <UniqueIdentifier>{2abaefa1-51ec-4af6-8b88-f87a5c7bdbdd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Solver\Game Tree">
+      <UniqueIdentifier>{5285fbb0-567e-4613-a391-ae9d6c530855}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Solver\Game Tree">
+      <UniqueIdentifier>{775d98f0-b3c0-46cd-8842-8691c2a4c358}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -99,6 +105,12 @@
     <ClInclude Include="PerfectHashTable.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="GameTree.h">
+      <Filter>Header Files\Solver\Game Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStateNode.h">
+      <Filter>Header Files\Solver\Game Tree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PokerSolver.cpp">
@@ -136,6 +148,12 @@
     </ClCompile>
     <ClCompile Include="PerfectHashTable.cpp">
       <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTree.cpp">
+      <Filter>Source Files\Solver\Game Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStateNode.cpp">
+      <Filter>Source Files\Solver\Game Tree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

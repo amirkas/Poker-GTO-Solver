@@ -132,6 +132,8 @@
     <ClInclude Include="Deck.h" />
     <ClInclude Include="FastHandEvaluator.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="GameStateNode.h" />
+    <ClInclude Include="GameTree.h" />
     <ClInclude Include="HandBitMask.h" />
     <ClInclude Include="HandEvaluation.h" />
     <ClInclude Include="HandEvaluationConstants.h" />
@@ -147,6 +149,8 @@
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="CardTest.cpp" />
     <ClCompile Include="Deck.cpp" />
+    <ClCompile Include="GameStateNode.cpp" />
+    <ClCompile Include="GameTree.cpp" />
     <ClCompile Include="HandBitMask.cpp" />
     <ClCompile Include="HandEvaluation.cpp" />
     <ClCompile Include="HoleCards.cpp" />
