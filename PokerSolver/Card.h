@@ -45,6 +45,6 @@ public:
 	friend bool operator>(const Card&, const Card&);
 
 	//Comparator
-	static  CardComparator(const Card*, const Card*);
+	static bool CardComparator(const Card*, const Card*);
 };
 

@@ -26,11 +26,4 @@ public:
 
 	int GetHandPrimeValue();
 
-	
- 
-
-
-
-
-
 };
