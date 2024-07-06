@@ -1,109 +1,107 @@
 #include "FastHandEvaluator.h"
 #include "HandEvaluationConstants.h"
+
+#include "HandBitMask.h"
 using namespace HandEvalConstants;
+
+/*
+Public Function Definitions
+*/
+
+/* Constructor and Deconstructor */
 
 //Creates FastHandEvaluator Object, which takes in filename that will/already stores the lookup table
 //Bool new_file creates new lookup table file at file_name if true, loads file at filename if false.
-FastHandEvaluator::FastHandEvaluator(std::string file_name, bool new_file, bool store_contents) {
+FastHandEvaluator::FastHandEvaluator() {
 
-	this->lookup_file = file_name;
-	//Initialize struct of lookup maps.
-	this->lookup_struct = new LookupData;
-	this->lookup_struct->flushes = new std::map<int, short>;
-	this->lookup_struct->paired = new std::map<int, short>;
-	this->lookup_struct->unique_ranks = new std::map<int, short>;
+	
+	
+	this->flushes = new std::unordered_map<int, short>;
+	this->paired = new std::unordered_map<int, short>;
+	this->unique_ranks = new std::unordered_map<int, short>;
 
-	this->are_hands_evaluated = false;
-	if (new_file) {
-		//Creates file by precomputing hand ranks
-		//stores the contents in this object within memory if store_contents is true.
-		CreateLookupFile(lookup_file, store_contents);
-	}
-	else {
-		//Reads file at file_name and stores contents in this object.
-		ReadLookupFile(lookup_file);
-	}
 }
 
 //Deconstructor
 FastHandEvaluator::~FastHandEvaluator() {
 
-	delete(flushes);
-	delete(straights);
-	delete(paired);
-	delete(high_cards);
+	delete(this->flushes);
+	delete(this->paired);
+	delete(this->unique_ranks);
 }
 
 
-//Returns -1 if File could not be created
-//Returns -2 if Lookup Table could not be created
-//Returns 1 if File created successfully
-//Returns 2 if File created and stored in Object Successfully.
-int FastHandEvaluator::CreateLookupFile(std::string file_name, bool store_contents) {
-
-
-}
-
-//Returns -1 if File could not be opened
-//Returns -2 if File contents could not be stored
-//Returns 1 if File opened and stored Successfully.
-int FastHandEvaluator::ReadLookupFile(std::string file_name) {
-
-	std::streampos size;
-	int err;
-
-	std::ifstream file(file_name.c_str(), std::ios::in, std::ios::binary, std::ios::ate);
-	if (file.is_open()) {
-		size = file.tellg();
-		if (size * sizeof(char) > TABLE_SIZE * sizeof(short)) {
-			return -2;
-		}
-		file.seekg(0, std::ios::beg);
-		file.read((char*) this->lookup_table, size);
-		file.close();
-		return 1;
-	}
-	else {
-		return -1;
-	}
-}
-
+/* Hand rank evaluators*/
 
 //Returns -1 if hand cannot be evaluated
-short FastHandEvaluator::EvaluateHandRank(HandBitMask* hand_bits) {
+short FastHandEvaluator::GetHandRank(HandBitMask* hand_bits) {
 
-	if (!this->are_hands_evaluated) {
+	//HandBitMask must not be nullptr
+	if (hand_bits == nullptr) {
 		return -1;
 	}
-	//Hand must have 5 cards
-	if (hand_bits->size() != 5) {
-		return -1;
+	//Check if hand is flush
+	short HandPrimeVal = hand_bits->GetHandPrimeValue();
+	if (hand_bits->IsHandFlush()) {
+		return this->flushes->at(HandPrimeVal);
+	}
+	//Check if cards in hand are all unique rank
+	if (hand_bits->AreCardsUnique()) {
+		return this->unique_ranks->at(HandPrimeVal);
+	}
+	//Otherwise, and is paired
+	else {
+		return this->paired->at(HandPrimeVal);
 	}
 }
 
-void FastHandEvaluator::EvaluateAllHandRanks(short* buf) {
+//Returns -1 if Out of position player wins hand
+//Returns 1 if In Position player wins hand
+//Returns 0 if both players tie (known as chopping colloqially)
+int FastHandEvaluator::EvaluateWinner(HandBitMask* OOP_hand, HandBitMask* IP_hand) {
+	short OOP_rank = GetHandRank(OOP_hand);
+	short IP_rank = GetHandRank(IP_hand);
+	if (OOP_rank < IP_rank) {
+		return -1;
+	}
+	if (OOP_rank == IP_rank) {
+		return 0;
+	}
+	else {
+		return 1;
+	}
+}
 
-	GenerateStraightFlushesAndStraights(this->lookup_struct->flushes, this->lookup_struct->unique_ranks);
 
-	GenerateQuads(this->lookup_struct->paired);
 
-	GenerateFullHouses(this- lookup_struct-> >paired);
+/*
+Private Function Definitions
+*/
 
-	GenerateFlushes(this->lookup_struct->flushes);
+/*
+Helper functions that generate lookup table for hand ranking retrieval
+*/
+void FastHandEvaluator::EvaluateAllHandRanks() {
 
-	GenerateTrips(this->lookup_struct->paired);
+	GenerateStraightFlushesAndStraights(this->flushes, this->unique_ranks);
 
-	GenerateTwoPairs(this->lookup_struct->paired);
+	GenerateQuads(this->paired);
 
-	GenerateOnePairs(this->lookup_struct->paired);
+	GenerateFullHouses(this->paired);
 
-	GenerateAllHighCards(this->lookup_struct->unique_ranks,HandEvalConstants::START_RANK_HIGH_CARDS);
+	GenerateFlushes(this->flushes);
 
-	are_hands_evaluated = true;
+	GenerateTrips(this->paired);
+
+	GenerateTwoPairs(this->paired);
+
+	GenerateOnePairs(this->paired);
+
+	GenerateAllHighCards(this->unique_ranks,HandEvalConstants::START_RANK_HIGH_CARDS);
 
 }
 
-void FastHandEvaluator::GenerateStraightFlushesAndStraights(std::map<int, short>* flushes, std::map<int, short>* straights) {
+void FastHandEvaluator::GenerateStraightFlushesAndStraights(std::unordered_map<int, short>* flushes, std::unordered_map<int, short>* straights) {
 	
 	short hand_rank = START_RANK_STRAIGHT_FLUSH;
 	short straight_rank = START_RANK_STRAIGHTS;
@@ -121,7 +119,7 @@ void FastHandEvaluator::GenerateStraightFlushesAndStraights(std::map<int, short>
 	}
 }
 
-void FastHandEvaluator::GenerateQuads(std::map<int, short>* paired) {
+void FastHandEvaluator::GenerateQuads(std::unordered_map<int, short>* paired) {
 
 	short hand_rank = START_RANK_QUADS;
 	int quad_rank = CARD_RANKS.at('A');
@@ -144,7 +142,7 @@ void FastHandEvaluator::GenerateQuads(std::map<int, short>* paired) {
 	}
 }
 
-void FastHandEvaluator::GenerateFullHouses(std::map<int, short>* paired) {
+void FastHandEvaluator::GenerateFullHouses(std::unordered_map<int, short>* paired) {
 
 	short hand_rank = START_RANK_FULL_HOUSE;
 	
@@ -168,7 +166,7 @@ void FastHandEvaluator::GenerateFullHouses(std::map<int, short>* paired) {
 	}
 }
 
-void FastHandEvaluator::GenerateAllHighCards(std::map<int, short>* high_cards, int start_rank) {
+void FastHandEvaluator::GenerateAllHighCards(std::unordered_map<int, short>* high_cards, int start_rank) {
 
 	short hand_rank = start_rank;
 
@@ -211,11 +209,11 @@ void FastHandEvaluator::GenerateAllHighCards(std::map<int, short>* high_cards, i
 	}
 }
 
-void FastHandEvaluator::GenerateFlushes(std::map<int, short>* flushes) {
+void FastHandEvaluator::GenerateFlushes(std::unordered_map<int, short>* flushes) {
 	GenerateAllHighCards(flushes, START_RANK_FLUSHES);
 }
 
-void FastHandEvaluator::GenerateTrips(std::map<int, short>* paired) {
+void FastHandEvaluator::GenerateTrips(std::unordered_map<int, short>* paired) {
 
 	short hand_rank = START_RANK_TRIPS;
 	int trips_rank = CARD_RANKS.at('A');
@@ -246,7 +244,7 @@ void FastHandEvaluator::GenerateTrips(std::map<int, short>* paired) {
 	}
 }
 
-void FastHandEvaluator::GenerateTwoPairs(std::map<int, short>* paired) {
+void FastHandEvaluator::GenerateTwoPairs(std::unordered_map<int, short>* paired) {
 
 	int hand_rank = START_RANK_TWO_PAIRS;
 	
@@ -276,7 +274,7 @@ void FastHandEvaluator::GenerateTwoPairs(std::map<int, short>* paired) {
 	}
 }
 
-void FastHandEvaluator::GenerateOnePairs(std::map<int, short>* paired) {
+void FastHandEvaluator::GenerateOnePairs(std::unordered_map<int, short>* paired) {
 
 	int hand_rank = START_RANK_ONE_PAIRS;
 
@@ -310,8 +308,8 @@ void FastHandEvaluator::GenerateOnePairs(std::map<int, short>* paired) {
 	}
 }
 
-//Helper Functions
 
+//Helper Functions for lookup table generation
 bool FastHandEvaluator::AreRanksUnique(std::vector<int> ranks_list) {
 
 	std::bitset<13> curr = std::bitset<13>().set();
