@@ -182,7 +182,7 @@ void FastHandEvaluator::GenerateAllHighCards(std::unordered_map<int, short>* hig
 				int fourth_rank = third_rank - 1;
 				for (fourth_rank; fourth_rank > 2; fourth_rank--) {
 
-					int fifth_rank = fourth_rank - 1);
+					int fifth_rank = fourth_rank - 1;
 					for (fifth_rank; fifth_rank > 1; fifth_rank--) {
 
 						std::vector<int> temp_rank_list = { first_rank, second_rank, third_rank, fourth_rank, fifth_rank };
@@ -218,7 +218,7 @@ void FastHandEvaluator::GenerateTrips(std::unordered_map<int, short>* paired) {
 	short hand_rank = START_RANK_TRIPS;
 	int trips_rank = CARD_RANKS.at('A');
 
-	for (trips_rank; trips_rank > 1, trips_rank--) {
+	for (trips_rank; trips_rank > 1; trips_rank--) {
 
 		int kicker_high_rank = CARD_RANKS.at('A');
 		for (kicker_high_rank; kicker_high_rank > 2; kicker_high_rank--) {
@@ -232,7 +232,7 @@ void FastHandEvaluator::GenerateTrips(std::unordered_map<int, short>* paired) {
 
 					int trips_prime = GetCardPrime(trips_rank);
 					int kicker_high_prime = GetCardPrime(kicker_high_rank);
-					int kicker_low_prime = GetCardPrime(kicker_low_prime);
+					int kicker_low_prime = GetCardPrime(kicker_low_rank);
 					int prime_product = pow(trips_prime, 3) * kicker_high_prime * kicker_low_prime;
 					std::pair<int, short> trips_entry = std::make_pair(prime_product, hand_rank);
 					paired->insert(trips_entry);
@@ -315,7 +315,7 @@ bool FastHandEvaluator::AreRanksUnique(std::vector<int> ranks_list) {
 	std::bitset<13> curr = std::bitset<13>().set();
 	for (int rank : ranks_list) {
 		std::bitset<13> int_bit = std::bitset<13>().set(1);
-		int_bit << (rank - 2);
+		int_bit <<= (rank - 2);
 		curr |= int_bit;
 
 	}
@@ -326,22 +326,22 @@ bool FastHandEvaluator::IsHandStraight(std::vector<int> ranks_list) {
 
 	int min_rank = 15;
 	int max_rank = 0;
-	std::bitset<13> curr = std::bitset<13>().set();
+	std::bitset<27> curr = std::bitset<27>().set();
 	for (int rank : ranks_list) {
 		min_rank = std::min(rank, min_rank);
 		max_rank = std::min(rank, max_rank);
-		std::bitset<13> int_bit = std::bitset<13>().set(1);
-		int_bit << (rank - 2);
+		std::bitset<27> int_bit = std::bitset<27>().set(1);
+		int_bit <<= (rank - 2);
 		curr |= int_bit;
 	}
 
-	curr >> (min_rank - 2);
+	curr >>= (min_rank - 2);
 
 	//Edge case for Wheel Straight
 	if (max_rank == 14 && min_rank == 2) {
 		//Shift bitset to left by 1 and OR with {00001} to check for wheel
-		curr << 1;
-		std::bitset<13> one_bit = std::bitset<13>().set(1);
+		curr <<= 1;
+		std::bitset<27> one_bit = std::bitset<27>().set(1);
 		curr |= one_bit;
 	}
 	

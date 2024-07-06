@@ -31,11 +31,11 @@ public:
 	Card(std::string card);
 
 	//Object Accessors
-	char GetRankAsChar();
-	char GetSuitAsChar();
-	short int GetRankAsInt();
-	short int GetSuitAsInt();
-	std::string toString();
+	char GetRankAsChar() const;
+	char GetSuitAsChar() const;
+	short int GetRankAsInt() const;
+	short int GetSuitAsInt() const;
+	std::string toString() const;
 
 	//Operator Overloads
 	friend bool operator==(const Card&, const Card&);

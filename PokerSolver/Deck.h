@@ -12,15 +12,15 @@ private:
 	Card* deck[DECK_SIZE];
 	short int drawn_count;
 
-	Card* CardAt(int);
+	Card* CardAt(int) const;
 
 	void SetCardAt(Card*, int);
 
-	static int RandomCardIndex(int, int);
+	int RandomCardIndex(int, int) const;
 
 	void SwapCards(int, int);
 
-	int GetUndrawnEnd();
+	int GetUndrawnEnd() const;
 
 public:
 	
@@ -34,8 +34,8 @@ public:
 
 	void ResetDeck();
 
-	int NumRemainingCards();
+	int NumRemainingCards() const;
 
-	int NumDrawnCards();
+	int NumDrawnCards() const;
 };
 

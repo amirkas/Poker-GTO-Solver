@@ -25,23 +25,23 @@ Card::Card(std::string card) {
 
 
 //Object Accessor Implementation
-char Card::GetRankAsChar() {
+char Card::GetRankAsChar() const {
 	return this->rank;
 }
 
-char Card::GetSuitAsChar() {
+char Card::GetSuitAsChar() const {
 	return this->suit;
 }
 
-short int Card::GetRankAsInt() {
+short int Card::GetRankAsInt() const {
 	return CARD_VALUES.at(this->rank);
 }
 
-short int Card::GetSuitAsInt() {
+short int Card::GetSuitAsInt() const {
 	return SUIT_VALUES.at(this->suit);
 }
 
-std::string Card::toString() {
+std::string Card::toString() const {
 
 	return std::string{this->rank, this->suit};
 

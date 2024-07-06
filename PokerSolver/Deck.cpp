@@ -98,7 +98,7 @@ Helper functions used by API.
 */
 
 //Retrieve Card at index 'card_index'
-Card* Deck::CardAt(int card_index) {
+Card* Deck::CardAt(int card_index) const {
 	return this->deck[card_index];
 }
 
@@ -108,18 +108,18 @@ void Deck::SetCardAt(Card* card, int card_index) {
 }
 
 //Retrieves random number in range of ['low', 'high') (Low inclusive, High exclusive)
-int Deck::RandomCardIndex(int low, int high) {
+int Deck::RandomCardIndex(int low, int high) const {
 
 	return (std::rand() % (high - low)) + low;
 }
 
 //Get number of remaining cards in deck
-int Deck::NumRemainingCards() {
+int Deck::NumRemainingCards() const {
 	return DECK_SIZE - this->drawn_count;
 }
 
 //Retrieves number of undrawn cards in the deck
-int Deck::NumDrawnCards() {
+int Deck::NumDrawnCards() const {
 
 	return this->drawn_count;
 }
@@ -133,7 +133,7 @@ void Deck::SwapCards(int index_one, int index_two) {
 }
 
 //Get index of end of undrawn cards
-int Deck::GetUndrawnEnd() {
+int Deck::GetUndrawnEnd () const {
 
 	return NumRemainingCards();
 }
