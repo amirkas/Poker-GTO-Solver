@@ -27,7 +27,7 @@ int Range::HandHash(card_pair hole_cards, bool is_hand_sorted) {
 	//Calculate number of hands before indexed hand.
 
 	//Number of unpaired hands before pair: (first_card, first_card)
-	int previous_hands = ((first_card_rank + 1) * (second_card_rank) * 8);
+	int previous_hands = (192 * first_card_rank) - (first_card_rank * (first_card_rank - 1) * 8);
 
 	//Number of paired hands before pair: (first_card, first_card)
 	previous_hands += (first_card_rank * 6);
@@ -41,7 +41,6 @@ int Range::HandHash(card_pair hole_cards, bool is_hand_sorted) {
 	}
 	
 
-	
 	const char first_suit = first_card[1];
 	const char second_suit = second_card[1];
 
@@ -59,7 +58,7 @@ int Range::HandHash(card_pair hole_cards, bool is_hand_sorted) {
 		suit_offset = GetPairedSuitComboVal(first_suit, second_suit);
 	}
 
-	return previous_hands + suit_offset;
+	return previous_hands + suit_offset - 1;
 }
 
 /*
