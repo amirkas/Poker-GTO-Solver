@@ -3,6 +3,7 @@
 #include <vector>
 
 class GameStateNode;
+class Range;
 
 class GameTreeConfig {
 
@@ -29,6 +30,7 @@ private:
 
 	float effective_stack_size;
 	
+	std::vector<const char*> flop;
 
 public:
 	/*
@@ -46,7 +48,8 @@ public:
 		std::vector< std::vector<float>* > IP_flop_bets,
 		std::vector< std::vector<float>* > IP_turn_bets,
 		std::vector< std::vector<float>* > IP_river_bets,
-		float effective_stack
+		float effective_stack,
+		std::vector<const char *> flop_cards
 	);
 
 	~GameTreeConfig();
@@ -92,16 +95,20 @@ public:
 
 class GameTree {
 
+private:
+
+
+
 public:
 
 	GameStateNode* root;
 
-	//Constructs static game tree with GameTreeConfiguration
-	GameTree(GameTreeConfig*);
+	//Constructs static game tree with GameTreeConfiguration and each player's ranges
+	GameTree(GameTreeConfig* tree_configuration, Range* IP_range, Range* OOP_range);
 
-	GameStateNode* GetRootGameState;
+	GameStateNode* GetRootGameState();
 	
-private:
+
 
 
 };

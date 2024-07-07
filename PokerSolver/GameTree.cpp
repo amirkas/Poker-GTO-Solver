@@ -24,14 +24,15 @@ GameTreeConfig::GameTreeConfig() {
 	this->IP_turn_bets = new std::vector<std::vector<float>*>;
 	this->IP_river_bets = new std::vector<std::vector<float>*>;
 
-
+	effective_stack_size = 0.0;
 }
 
 GameTreeConfig::GameTreeConfig(
 	std::vector< std::vector<float>* > oop_flop_bets, std::vector< std::vector<float>* > oop_turn_bets,
 	std::vector< std::vector<float>* > oop_river_bets, std::vector< std::vector<float>* > ip_flop_bets,
 	std::vector< std::vector<float>* > ip_turn_bets, std::vector< std::vector<float>* > ip_river_bets,
-	float effective_stack) {
+	float effective_stack,
+	std::vector<const char*> flop_cards) {
 
 	GameTreeConfig();
 	SetOopFlopBets(&oop_flop_bets);
@@ -43,6 +44,8 @@ GameTreeConfig::GameTreeConfig(
 	SetIpRiverBets(&ip_river_bets);
 
 	this->effective_stack_size = effective_stack;
+	std::move(this->flop.begin(), this->flop.end(), flop_cards.begin());
+
 
 }
 
@@ -94,7 +97,7 @@ void GameTreeConfig::SetOopRiverBets(std::vector< std::vector<float>* >* oop_riv
 
 void GameTreeConfig::SetIpFlopBets(std::vector< std::vector<float>* >* ip_flop_bets) {
 
-	for (size_t i = 0; i < ip_flop_bets->size()); i++) {
+	for (size_t i = 0; i < ip_flop_bets->size(); i++) {
 
 		ip_flop_bets->at(i) = new std::vector<float>;
 		std::move(ip_flop_bets->at(i)->begin(), ip_flop_bets->at(i)->end(), this->IP_flop_bets->at(i)->begin());
@@ -162,3 +165,7 @@ std::vector< std::vector<float>* >* GameTreeConfig::GetIpRiverBets() {
 GameTree Class Definition
 
 */
+
+GameStateNode* GameTree::GetRootGameState() {
+	return root;
+}

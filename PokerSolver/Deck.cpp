@@ -41,7 +41,7 @@ Card* Deck::DrawRandomCard() {
 
 	short int drawn_cards = NumDrawnCards();
 	if (drawn_cards == DECK_SIZE) {
-		ShuffleDeck;
+		ShuffleDeck();
 	}
 	int r = RandomCardIndex(0, GetUndrawnEnd());
 	Card *drawn_card = CardAt(r);
