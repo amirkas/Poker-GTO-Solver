@@ -18,6 +18,7 @@ class Range {
 
 private:
 
+	short initial_num_hands;
 	static GameStateNode* range_arr[NUM_CARD_COMBOS];
 	static float range_freq[NUM_CARD_COMBOS];
 
@@ -40,6 +41,8 @@ public:
 	GameStateNode* GetGameStateListPtr(card_pair hole_cards, bool is_hand_sorted);
 
 	float GetHandFrequency(card_pair hole_cards, bool is_hand_sorted);
+
+	short GetInitialNumHands();
 
 	void SetGameStateList(card_pair hole_cards, GameStateNode* GameStateList, bool is_hand_sorted);
 

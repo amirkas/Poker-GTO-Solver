@@ -171,6 +171,7 @@ Range::Range(std::vector<std::pair<card_pair, GameStateNode*>>* range_hole_cards
 
 	for (std::pair<card_pair, GameStateNode*> hand : *(range_hole_cards)) {
 		SetGameStateList(hand.first, hand.second, are_hands_sorted);
+		this->initial_num_hands += 1;
 	}
 }
 
@@ -180,6 +181,7 @@ Range::Range(std::vector<std::pair<card_pair_and_freq, GameStateNode*>>* range_h
 	for (std::pair<card_pair_and_freq, GameStateNode*> hand : *( range_hole_cards_and_freq )) {
 		SetGameStateList(hand.first.first, hand.second, are_hands_sorted);
 		SetHandFrequency(hand.first.first, hand.first.second, are_hands_sorted);
+		this->initial_num_hands += 1;
 	}
 
 }
@@ -198,6 +200,10 @@ float Range::GetHandFrequency(card_pair hole_cards, bool is_hand_sorted) {
 
 	int hand_hash = HandHash(hole_cards, is_hand_sorted);
 	return this->range_freq[hand_hash];
+}
+
+short Range::GetInitialNumHands() {
+	return this->initial_num_hands;
 }
 
 

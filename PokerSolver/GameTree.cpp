@@ -16,25 +16,33 @@ Constructors / Deconstructor definitions
 
 GameTreeConfig::GameTreeConfig() {
 
-	this->OOP_flop_bets = new std::vector<std::vector<float>*>;
-	this->OOP_turn_bets = new std::vector<std::vector<float>*>;
-	this->OOP_river_bets = new std::vector<std::vector<float>*>;
+	this->OOP_flop_bets = new std::vector<ActionNode*>;
+	this->OOP_turn_bets = new std::vector<ActionNode*>;
+	this->OOP_river_bets = new std::vector<ActionNode*>;
 
-	this->IP_flop_bets = new std::vector<std::vector<float>*>;
-	this->IP_turn_bets = new std::vector<std::vector<float>*>;
-	this->IP_river_bets = new std::vector<std::vector<float>*>;
+	this->IP_flop_bets = new std::vector<ActionNode*>;
+	this->IP_turn_bets = new std::vector<ActionNode*>;
+	this->IP_river_bets = new std::vector<ActionNode*>;
 
 	effective_stack_size = 0.0;
 }
 
 GameTreeConfig::GameTreeConfig(
-	std::vector< std::vector<float>* > oop_flop_bets, std::vector< std::vector<float>* > oop_turn_bets,
-	std::vector< std::vector<float>* > oop_river_bets, std::vector< std::vector<float>* > ip_flop_bets,
-	std::vector< std::vector<float>* > ip_turn_bets, std::vector< std::vector<float>* > ip_river_bets,
+	std::vector< ActionNode* > oop_flop_bets, std::vector< ActionNode* > oop_turn_bets,
+	std::vector< ActionNode* > oop_river_bets, std::vector< ActionNode* > ip_flop_bets,
+	std::vector< ActionNode* > ip_turn_bets, std::vector< ActionNode* > ip_river_bets,
 	float effective_stack,
 	std::vector<const char*> flop_cards) {
 
-	GameTreeConfig();
+
+	this->OOP_flop_bets = new std::vector<ActionNode*>;
+	this->OOP_turn_bets = new std::vector<ActionNode*>;
+	this->OOP_river_bets = new std::vector<ActionNode*>;
+
+	this->IP_flop_bets = new std::vector<ActionNode*>;
+	this->IP_turn_bets = new std::vector<ActionNode*>;
+	this->IP_river_bets = new std::vector<ActionNode*>;
+	
 	SetOopFlopBets(&oop_flop_bets);
 	SetOopTurnBets(&oop_turn_bets);
 	SetOopRiverBets(&oop_river_bets);
@@ -65,61 +73,54 @@ GameTreeConfig::~GameTreeConfig() {
 Settor API definitions
 */
 
-void GameTreeConfig::SetOopFlopBets(std::vector< std::vector<float>* >* oop_flop_bets) {
+void GameTreeConfig::SetOopFlopBets(std::vector< ActionNode* >* oop_flop_bets) {
 
 
 	for (size_t i = 0; i < oop_flop_bets->size(); i++) {
 
-		oop_flop_bets->at(i) = new std::vector<float>;
-		std::move(oop_flop_bets->at(i)->begin(), oop_flop_bets->at(i)->end(), this->OOP_flop_bets->at(i)->begin());
-
+		this->OOP_flop_bets->at(i) = std::move(oop_flop_bets->at(i));
 	}
 }
 
-void GameTreeConfig::SetOopTurnBets(std::vector< std::vector<float>* >* oop_turn_bets) {
+void GameTreeConfig::SetOopTurnBets(std::vector< ActionNode* >* oop_turn_bets) {
 
 	for (size_t i = 0; i < oop_turn_bets->size(); i++) {
 
-		oop_turn_bets->at(i) = new std::vector<float>;
-		std::move(oop_turn_bets->at(i)->begin(), oop_turn_bets->at(i)->end(), this->OOP_turn_bets->at(i)->begin());
+		this->OOP_turn_bets->at(i) = std::move(oop_turn_bets->at(i));
 	}
 	
 }
 
-void GameTreeConfig::SetOopRiverBets(std::vector< std::vector<float>* >* oop_river_bets) {
+void GameTreeConfig::SetOopRiverBets(std::vector< ActionNode* >* oop_river_bets) {
 
 	for (size_t i = 0; i < oop_river_bets->size(); i++) {
 
-		oop_river_bets->at(i) = new std::vector<float>;
-		std::move(oop_river_bets->at(i)->begin(), oop_river_bets->at(i)->end(), this->OOP_river_bets->at(i)->begin());
+		this->OOP_river_bets->at(i) = std::move(oop_river_bets->at(i));
 	}
 }
 
-void GameTreeConfig::SetIpFlopBets(std::vector< std::vector<float>* >* ip_flop_bets) {
+void GameTreeConfig::SetIpFlopBets(std::vector< ActionNode* >* ip_flop_bets) {
 
 	for (size_t i = 0; i < ip_flop_bets->size(); i++) {
 
-		ip_flop_bets->at(i) = new std::vector<float>;
-		std::move(ip_flop_bets->at(i)->begin(), ip_flop_bets->at(i)->end(), this->IP_flop_bets->at(i)->begin());
+		this->IP_flop_bets->at(i) = std::move(ip_flop_bets->at(i));
 	}
 	
 }
 
-void GameTreeConfig::SetIpTurnBets(std::vector< std::vector<float>* >* ip_turn_bets) {
+void GameTreeConfig::SetIpTurnBets(std::vector< ActionNode* >* ip_turn_bets) {
 
 	for (size_t i = 0; i < ip_turn_bets->size(); i++) {
 
-		ip_turn_bets->at(i) = new std::vector<float>;
-		std::move(ip_turn_bets->at(i)->begin(), ip_turn_bets->at(i)->end(), this->IP_turn_bets->at(i)->begin());
+		this->IP_turn_bets->at(i) = std::move(ip_turn_bets->at(i));
 	}
 }
 
-void GameTreeConfig::SetIpRiverBets(std::vector< std::vector<float>* >* ip_river_bets) {
+void GameTreeConfig::SetIpRiverBets(std::vector< ActionNode* >* ip_river_bets) {
 
 	for (size_t i = 0; i < ip_river_bets->size(); i++) {
 
-		ip_river_bets->at(i) = new std::vector<float>;
-		std::move(ip_river_bets->at(i)->begin(), ip_river_bets->at(i)->end(), this->IP_river_bets->at(i)->begin());
+		this->IP_river_bets->at(i) = std::move(ip_river_bets->at(i));
 	}
 }
 
@@ -127,32 +128,32 @@ void GameTreeConfig::SetIpRiverBets(std::vector< std::vector<float>* >* ip_river
 Retrieval API definitions
 */
 
-std::vector< std::vector<float>* >* GameTreeConfig::GetOopFlopBets() {
+std::vector< ActionNode* >* GameTreeConfig::GetOopFlopBets() {
 
 	return this->OOP_flop_bets;
 }
 
-std::vector< std::vector<float>* >* GameTreeConfig::GetOopTurnBets() {
+std::vector< ActionNode* >* GameTreeConfig::GetOopTurnBets() {
 
 	return this->OOP_turn_bets;
 }
 
-std::vector< std::vector<float>* >* GameTreeConfig::GetOopRiverBets() {
+std::vector< ActionNode* >* GameTreeConfig::GetOopRiverBets() {
 
 	return this->OOP_river_bets;
 }
 
-std::vector< std::vector<float>* >* GameTreeConfig::GetIpFlopBets() {
+std::vector< ActionNode* >* GameTreeConfig::GetIpFlopBets() {
 
 	return this->IP_flop_bets;
 }
 
-std::vector< std::vector<float>* >* GameTreeConfig::GetIpTurnBets() {
+std::vector< ActionNode* >* GameTreeConfig::GetIpTurnBets() {
 
 	return this->IP_turn_bets;
 }
 
-std::vector< std::vector<float>* >* GameTreeConfig::GetIpRiverBets() {
+std::vector< ActionNode* >* GameTreeConfig::GetIpRiverBets() {
 
 	return this->IP_river_bets;
 }
@@ -166,6 +167,19 @@ GameTree Class Definition
 
 */
 
-GameStateNode* GameTree::GetRootGameState() {
-	return root;
+GameTree::GameTree(GameTreeConfig* tree_configuration, Range* IP_range_ptr, Range* OOP_range_ptr, int num_threads) {
+
+	//Assign threads to equally distribute workload.
+	//Edge case for 1 thread -> Create Tree for OOP range then IP range.
+
+
+
+
 }
+
+/*
+GameTree Constructor Helpers
+*/
+
+
+

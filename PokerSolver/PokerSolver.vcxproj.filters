@@ -111,6 +111,12 @@
     <ClInclude Include="GameStateNode.h">
       <Filter>Header Files\Solver\Game Tree</Filter>
     </ClInclude>
+    <ClInclude Include="ActionNode.h">
+      <Filter>Header Files\Solver\Game Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTreeConstants.h">
+      <Filter>Header Files\Solver\Game Tree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PokerSolver.cpp">
@@ -153,6 +159,9 @@
       <Filter>Source Files\Solver\Game Tree</Filter>
     </ClCompile>
     <ClCompile Include="GameStateNode.cpp">
+      <Filter>Source Files\Solver\Game Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionNode.cpp">
       <Filter>Source Files\Solver\Game Tree</Filter>
     </ClCompile>
   </ItemGroup>
