@@ -53,3 +53,5 @@ GameStateNode::GameStateNode(GameTreeConfig* tree_config, player player_type, st
 	
 
 }
+
+constexpr size_t sizeOfT = sizeof(GameStateNode)
