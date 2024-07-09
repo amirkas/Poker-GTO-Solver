@@ -125,14 +125,31 @@ class GameTree {
 
 private:
 
-	void GameTreeConstructor(GameTreeConfig* tree_config, card_pair curr_hand, const char* turn_card, const char* river_card) {
 
-	}
+	//Constructs all Game State nodes for given hand and player (OOP or IP player)
+	void GameStateListConstructor(GameTreeConfig* tree_config, card_pair curr_hand, player player_pos);
 
+	//Returns pointer to newly constructed GameState node for given number of actions.
+	GameStateNode* GameStateNodeConstructor(int num_actions);
+
+	//Returns number of strategic actions for a given GameTree configuration, player, street, and bet depth.
+	int NumActions(GameTreeConfig* config, player curr_player, street curr_street, bet_depth bet_num);
+
+	//Returns index for GameState node for given player, hand, street, and bet depth.
+	int GameStateIndex(player curr_player, card_pair curr_hand, street curr_street, bet_depth curr_bet_depth);
+
+	//Tracks max bet depth for each player for each street for tree navigation.
+	short max_IP_flop_depth;
+	short max_IP_turn_depth;
+	short max_IP_river_depth;
+
+	short max_OOP_flop_depth;
+	short max_OOP_turn_depth;
+	short max_OOP_river_depth;
 
 public:
 
-	
+	float effective_stack;
 	Range* IP_range;
 	Range* OOP_range;
 

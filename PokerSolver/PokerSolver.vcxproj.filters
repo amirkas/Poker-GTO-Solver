@@ -164,6 +164,9 @@
     <ClCompile Include="ActionNode.cpp">
       <Filter>Source Files\Solver\Game Tree</Filter>
     </ClCompile>
+    <ClCompile Include="GameTreeConfig.cpp">
+      <Filter>Source Files\Solver\Game Tree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PokerSolver.rc">
