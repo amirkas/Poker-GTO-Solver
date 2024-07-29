@@ -105,7 +105,7 @@
     <ClInclude Include="PerfectHashTable.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="GameTree.h">
+    <ClInclude Include="GameTreeConfig.h">
       <Filter>Header Files\Solver\Game Tree</Filter>
     </ClInclude>
     <ClInclude Include="GameStateNode.h">
@@ -115,6 +115,9 @@
       <Filter>Header Files\Solver\Game Tree</Filter>
     </ClInclude>
     <ClInclude Include="GameTreeConstants.h">
+      <Filter>Header Files\Solver\Game Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTree.h">
       <Filter>Header Files\Solver\Game Tree</Filter>
     </ClInclude>
   </ItemGroup>
@@ -155,9 +158,6 @@
     <ClCompile Include="PerfectHashTable.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="GameTree.cpp">
-      <Filter>Source Files\Solver\Game Tree</Filter>
-    </ClCompile>
     <ClCompile Include="GameStateNode.cpp">
       <Filter>Source Files\Solver\Game Tree</Filter>
     </ClCompile>
@@ -165,6 +165,9 @@
       <Filter>Source Files\Solver\Game Tree</Filter>
     </ClCompile>
     <ClCompile Include="GameTreeConfig.cpp">
+      <Filter>Source Files\Solver\Game Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTree.cpp">
       <Filter>Source Files\Solver\Game Tree</Filter>
     </ClCompile>
   </ItemGroup>

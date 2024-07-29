@@ -1,4 +1,4 @@
-#include "GameTree.h"
+#include "GameTreeConfig.h"
 #include "GameStateNode.h"
 
 /*

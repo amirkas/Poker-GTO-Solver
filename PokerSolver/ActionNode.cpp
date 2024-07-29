@@ -5,7 +5,7 @@ ActionNode::ActionNode(std::vector<float> input_actions) {
 }
 
 float ActionNode::PotSizeAfterAction(int action_index, float initial_pot_size,
-									 float effective_stack, street current_street) {
+									 float effective_stack,Street current_street) {
 
 	float action = actions.at(action_index);
 	

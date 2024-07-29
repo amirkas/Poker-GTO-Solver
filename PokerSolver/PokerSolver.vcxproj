@@ -134,6 +134,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameStateNode.h" />
     <ClInclude Include="GameTree.h" />
+    <ClInclude Include="GameTreeConfig.h" />
     <ClInclude Include="GameTreeConstants.h" />
     <ClInclude Include="HandBitMask.h" />
     <ClInclude Include="HandEvaluation.h" />
